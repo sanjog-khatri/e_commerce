@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// Define the User model for storing user information
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  password  String
+  address   String?
+  phone     String?
+  is_supplier    Boolean  @default(false)
+  products  Product[]
+  // Define the relation to Orders
+  orders    Order[]
+}
+
+// Define the Product model for storing product information
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  quantity    Int
+  category    String
+  user User @relation(fields: [userId], references: [id])
+  userId  Int
+
+  // Define the relation to OrderItems
+  orderItems  OrderItem[]
+}
+
+// Define the Order model for storing order information
+model Order {
+  id          Int       @id @default(autoincrement())
+  orderDate   DateTime  @default(now())
+  status      String
+  totalAmount Float
+
+  // Define the relation to User
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  // Define the relation to OrderItems
+  orderItems  OrderItem[]
+}
+
+// Define the OrderItem model for storing order item information
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  quantity    Int
+  price       Float
+  totalPrice  Float
+
+  // Define the relation to Order
+  order       Order   @relation(fields: [orderId], references: [id])
+  orderId     Int
+
+  // Define the relation to Product
+  product     Product @relation(fields: [productId], references: [id])
+  productId   Int
+}
