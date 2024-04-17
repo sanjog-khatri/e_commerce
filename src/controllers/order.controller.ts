@@ -18,7 +18,8 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try{
     console.log(req.body, ' is request body')
-    const data = await orderServices.create(req.body, (req as any).user.userId)
+    const orderItemId = Number( req.params.id)
+    const data = await orderServices.create(req.body, (req as any).user.userId,orderItemId)
   res.status(HttpStatusCodes.CREATED).send(data)
 } catch(error){
   next(error)

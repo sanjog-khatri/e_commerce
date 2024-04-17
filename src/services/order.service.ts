@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import  Boom from "@hapi/boom"
+import { any, z } from "zod"
+import { createOrderDtoBody } from "../validators/create-order.validator"
 
 const prisma = new PrismaClient()
 
@@ -25,29 +27,38 @@ export const getAll = async () => {
   
   
   
-  export const create = async (body: any, userId: number) => {
+  export const create = async (body: z.infer<typeof createOrderDtoBody>, userId: number, orderItemId: number) => {
     const { status, totalAmount } = body
-    try {
-      return await prisma.order.create({
+    // try {
 
-      data: {
+        let createdOrder: any;
+
+        await prisma.$transaction( async ( tx ) => {
+          createdOrder = await tx.order.create({
+          data: {
         
-        status,
-        totalAmount,
-        userId: userId
+            status,
+            totalAmount,
+            userId: userId,
+            orderItemId: orderItemId
+    
+          },
+          
+        })
 
-      }
     })
-    // return 'create garne api'
-  } catch( error: any) {
-    console.log(error);
 
-    if ( error.code === 'P2003') {
-      throw Boom.notFound('cannot be created')
-    } else {
-      throw(error)
-    }
-  }
+    return createdOrder
+    // return 'create garne api'
+  // } catch( error: any) {
+  //   console.log(error);
+
+  //   if ( error.code === 'P2003') {
+  //     throw Boom.notFound('cannot be created')
+  //   } else {
+  //     throw(error)
+  //   }
+  // }
 }
    
   export const update = async (id: number, body: any) => {

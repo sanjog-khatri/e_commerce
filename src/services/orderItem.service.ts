@@ -27,7 +27,7 @@ export const getAll = async () => {
   
   
   
-  export const create = async (body: z.infer<typeof createOrderDtoBody>, orderId: number, productId: number) => {
+  export const create = async (body: z.infer<typeof createOrderDtoBody>,  productId: number) => {
     const { quantity, price, totalPrice} = body
 
       let createdOrderItems: any;
@@ -40,7 +40,7 @@ export const getAll = async () => {
             quantity,
             price,
             totalPrice,
-            orderId: orderId,
+            
             productId: productId
             
     

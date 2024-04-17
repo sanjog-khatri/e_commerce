@@ -6,7 +6,7 @@ import { validate } from '../utils/validate'
 
 import { authenticateToken } from '../middlewares/authentication.middleware'
 import { createOrderDto, findOneOrderDto, getAllOrderDto, removeOrderDto, updateOrderDto } from '../validators/create-order.validator'
-const route = express.Router()
+const route = express.Router( { mergeParams: true })
 
 
 

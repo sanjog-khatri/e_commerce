@@ -19,7 +19,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
   try{
     console.log(req.body, ' is request body')
     const productId = Number( req.params.id )
-    const data = await orderItemServices.create(req.body, (req as any).order.orderId, productId)
+    const data = await orderItemServices.create(req.body, productId)
   res.status(HttpStatusCodes.CREATED).send(data)
 } catch(error){
   next(error)
